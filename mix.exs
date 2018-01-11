@@ -4,7 +4,7 @@ defmodule ServerUtils.Mixfile do
   def project do
     [
       app: :server_utils,
-      version: "0.0.1",
+      version: "0.0.2",
       elixir: "~> 1.5",
       elixirc_paths: elixirc_paths(Mix.env),
       start_permanent: Mix.env == :prod,
@@ -21,7 +21,7 @@ defmodule ServerUtils.Mixfile do
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      extra_applications: [:logger]
+      extra_applications: [:logger, :runtime_tools]
     ]
   end
 
@@ -31,6 +31,7 @@ defmodule ServerUtils.Mixfile do
       {:excoveralls, "~> 0.8", only: :test},
       {:mock, "~> 0.3", only: :test},
       {:credo, "~> 0.8", only: [:dev, :test], runtime: false},
+      {:plug, "~> 1.4"},
       {:dialyxir, "~> 0.5", only: :dev, runtime: false},
       {:ex_doc, "~> 0.16", only: :dev, runtime: false},
       {:sentry, "~> 6.0.5"},

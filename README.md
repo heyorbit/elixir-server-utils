@@ -8,10 +8,11 @@ This project has several module utils to handle common tasks in a server, like a
 
 Features:
 
- * Simple integer parsing
- * Page query params parser
- * JWT claims parser
- * Wrapped Logger with Sentry integration
+  * Phoenix plug to validate JWT header
+  * Simple integer parsing
+  * Page query params parser
+  * JWT claims parser
+  * Wrapped Logger with Sentry integration
 
 # Configuration
 
