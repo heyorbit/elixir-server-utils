@@ -31,7 +31,6 @@ defmodule ServerUtils.Parsers.IntegerParser do
     end
   end
 
-
   @doc """
   Parses an integer value.
 
