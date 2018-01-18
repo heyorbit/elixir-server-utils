@@ -1,3 +1,8 @@
+defmodule ParamException do
+  @type t :: %__MODULE__{message: String.t}
+  defexception [:message]
+end
+
 defmodule ServerUtils.Parsers.ParamsParser do
   @moduledoc """
   Module to get an `Integer.t` or a `PageParams.t` struct from a request map.
@@ -69,6 +74,15 @@ defmodule ServerUtils.Parsers.ParamsParser do
     case Map.get(params_map, attr_name, default) do
       value when is_integer(value) -> value
       value -> IntegerParser.parse_integer(value, default)
+    end
+  end
+
+  @spec parse_integer_param!(Map.t, String.t) :: Integer.t
+  def parse_integer_param!(params_map, attr_name) do
+    case Map.get(params_map, attr_name) do
+      nil -> raise ParamException, message: "Param not found"
+      value when is_integer(value) -> value
+      value -> IntegerParser.parse_integer!(value)
     end
   end
 
