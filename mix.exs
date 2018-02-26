@@ -7,11 +7,13 @@ defmodule ServerUtils.Mixfile do
     [
       app: :server_utils,
       version: "0.1.3",
-      elixir: "~> 1.5",
+      elixir: "~> 1.6",
       elixirc_paths: elixirc_paths(Mix.env),
       start_permanent: Mix.env == :prod,
       deps: deps(),
       aliases: aliases(),
+      package: package(),
+      description: description(),
       test_coverage: [tool: ExCoveralls],
       preferred_cli_env: ["coveralls": :test, "coveralls.detail": :test, "coveralls.post": :test, "coveralls.html": :test],
     ]
@@ -25,6 +27,20 @@ defmodule ServerUtils.Mixfile do
     [
       extra_applications: [:logger, :runtime_tools]
     ]
+  end
+
+  defp package do
+    [
+      name: "server_utils",
+      files: ["lib", "mix.exs", "README*", "LICENSE*"],
+      maintainers: ["Adrián Quintás"],
+      licenses: ["MIT"],
+      links: %{"GitHub" => "https://github.com/heyorbit/elixir-server-utils"}
+    ]
+  end
+
+  defp description do
+    "Server utils to automate common tasks like pagination or authentication"
   end
 
   # Run "mix help deps" to learn about dependencies.
