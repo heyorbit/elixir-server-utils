@@ -9,6 +9,7 @@ This project has several module utils to handle common tasks in a server, like a
 Features:
 
   * Phoenix plug to validate JWT header
+  * Phoenix plug to parse a pagination request
   * Simple integer parsing
   * Page query params parser
   * JWT claims parser
