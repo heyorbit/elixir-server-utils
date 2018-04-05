@@ -13,7 +13,9 @@ Features:
   * Phoenix plug to validate JWT header
   * Phoenix plug to parse a pagination request
   * Simple integer parsing
-  * Page query params parser
+  * Page parsing:
+    * Cursor pagination
+    * Standard pagination
   * JWT claims parser
   * Wrapped Logger with Sentry integration
 
@@ -23,7 +25,7 @@ Add to dependencies
 
 ```elixir
 def deps do
-  [{:server_utils, "~> 0.1.3"}]
+  [{:server_utils, "~> 0.1.4"}]
 end
 ```
 
@@ -33,7 +35,9 @@ mix deps.get
 
 ## Configuration
 
-Configure default pagination params
+Configure default pagination params:
+
+* Standard pagination
 
 ```
 config :server_utils,
@@ -42,4 +46,15 @@ config :server_utils,
   max_page_size: 25,
   page_size: 10,
   page_number: 1
+```
+
+* Cursor pagination
+
+```
+config :server_utils,
+  cursor_key: "cursor",
+  number_of_items_key: "number_of_items",
+  default_cursor: "",
+  default_number_of_items: 25,
+  max_number_of_items: 50
 ```

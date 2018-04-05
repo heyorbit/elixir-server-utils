@@ -6,21 +6,26 @@ defmodule ServerUtils.Mixfile do
   def project do
     [
       app: :server_utils,
-      version: "0.1.3",
+      version: "0.1.4",
       elixir: "~> 1.6",
-      elixirc_paths: elixirc_paths(Mix.env),
-      start_permanent: Mix.env == :prod,
+      elixirc_paths: elixirc_paths(Mix.env()),
+      start_permanent: Mix.env() == :prod,
       deps: deps(),
       aliases: aliases(),
       package: package(),
       description: description(),
       test_coverage: [tool: ExCoveralls],
-      preferred_cli_env: ["coveralls": :test, "coveralls.detail": :test, "coveralls.post": :test, "coveralls.html": :test],
+      preferred_cli_env: [
+        coveralls: :test,
+        "coveralls.detail": :test,
+        "coveralls.post": :test,
+        "coveralls.html": :test
+      ]
     ]
   end
 
   defp elixirc_paths(:test), do: ["lib", "test/support"]
-  defp elixirc_paths(_),     do: ["lib"]
+  defp elixirc_paths(_), do: ["lib"]
 
   # Run "mix help compile.app" to learn about applications.
   def application do
@@ -35,7 +40,7 @@ defmodule ServerUtils.Mixfile do
       files: ["lib", "mix.exs", "README*", "LICENSE*"],
       maintainers: ["Adrián Quintás"],
       licenses: ["MIT"],
-      links: %{"GitHub" => "https://github.com/heyorbit/elixir-server-utils"}
+      links: %{"GitHub" => "https://github.com/orbitdigital/elixir-server-utils"}
     ]
   end
 
@@ -48,21 +53,21 @@ defmodule ServerUtils.Mixfile do
     [
       {:excoveralls, "~> 0.8", only: :test},
       {:mock, "~> 0.3", only: :test},
-      {:credo, "~> 0.8", only: [:dev, :test], runtime: false},
+      {:dialyxir, "~> 0.5", only: [:dev], runtime: false},
+      {:credo, "~> 0.9.0-rc7", only: [:dev, :test], runtime: false},
       {:plug, "~> 1.4"},
-      {:dialyxir, "~> 0.5", only: :dev, runtime: false},
       {:ex_doc, "~> 0.16", only: :dev, runtime: false},
       {:sentry, "~> 6.0.5"},
       {:joken, "~> 1.5"},
-      {:exjsx, "~> 4.0"},
+      {:exjsx, "~> 4.0"}
     ]
   end
 
   defp aliases do
     [
-      "compile": ["compile --warnings-as-errors"],
-      "coveralls": ["coveralls.html --umbrella"],
-      "coveralls.html": ["coveralls.html --umbrella"],
+      compile: ["compile --warnings-as-errors"],
+      coveralls: ["coveralls.html --umbrella"],
+      "coveralls.html": ["coveralls.html --umbrella"]
     ]
   end
 end
