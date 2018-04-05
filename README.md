@@ -35,11 +35,13 @@ mix deps.get
 
 ## Configuration
 
+### Pagination
+
 Configure default pagination params:
 
 * Standard pagination
 
-```
+```elixir
 config :server_utils,
   page_size_key: "page_size",
   page_number_key: "page_number",
@@ -50,11 +52,44 @@ config :server_utils,
 
 * Cursor pagination
 
-```
+```elixir
 config :server_utils,
   cursor_key: "cursor",
   number_of_items_key: "number_of_items",
   default_cursor: "",
   default_number_of_items: 25,
   max_number_of_items: 50
+```
+
+## Usage
+
+[Check the documentation](https://hexdocs.pm/server_utils) for the different available plugs.
+
+### Pagination
+
+Set the plug in your router file to use it in a pipeline:
+
+```elixir
+pipeline :paginated do
+  plug(ServerUtils.Plugs.CursorPageRequest)
+end
+
+scope "/" do
+  pipe_through([:paginated])
+
+  get("/stuff", MyApp.StuffController, :get_stuff)
+end
+```
+
+Depending on the plug used, CursorPageRequest.t() or PageParams.t() will be inject in the Plug.Conn.t() struct:
+
+```elixir
+defmodule MyApp.StuffController do
+  use MyApp, :controller
+
+  def get_stuff(conn, params) do
+    cursor_page_request = conn.private[:page_request]
+    # Some other code using the cursor page request...
+  end
+end
 ```
