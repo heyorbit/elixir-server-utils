@@ -5,7 +5,7 @@ end
 
 defmodule ServerUtils.Parsers.ParamsParser do
   @moduledoc """
-  Module to get an `Integer.t` or a `PageParams.t` struct from a request map.
+  Module to get an `integer()` or a `PageParams.t` struct from a request map.
 
   In case of page params parse, it validates the maximum page size request and provides the configured maximum param if it is exceeded.
 
@@ -45,7 +45,7 @@ defmodule ServerUtils.Parsers.ParamsParser do
       %PageParams{page_number: 5, page_size: 50}
 
   """
-  @spec parse_page_params(Map.t()) :: PageParams.t()
+  @spec parse_page_params(map()) :: PageParams.t()
   def parse_page_params(params_map, opts \\ []) do
     default_page_number =
       opts[:page_number] || Application.get_env(:server_utils, :page_number) ||
@@ -87,7 +87,7 @@ defmodule ServerUtils.Parsers.ParamsParser do
       %PageParams{page_number: 5, page_size: 50}
 
   """
-  @spec parse_cursor_page_request(Map.t()) :: CursorPageRequest.t()
+  @spec parse_cursor_page_request(map()) :: CursorPageRequest.t()
   def parse_cursor_page_request(params_map, opts \\ []) do
     default_cursor =
       opts[:cursor] || Application.get_env(:server_utils, :default_cursor) || @default_cursor
@@ -117,7 +117,7 @@ defmodule ServerUtils.Parsers.ParamsParser do
   @doc """
   Parses a integer value from a request params map.
 
-  It returns the `Integer.t` with the parsed value or the default value if the param key is not present or is not an integer.
+  It returns the `integer()` with the parsed value or the default value if the param key is not present or is not an integer.
 
   ## Examples
 
@@ -128,7 +128,7 @@ defmodule ServerUtils.Parsers.ParamsParser do
       10
 
   """
-  @spec parse_integer_param(Map.t(), String.t(), Integer.t()) :: Integer.t()
+  @spec parse_integer_param(map(), String.t(), integer()) :: integer()
   def parse_integer_param(params_map, attr_name, default) do
     case Map.get(params_map, attr_name, default) do
       value when is_integer(value) -> value
@@ -136,7 +136,7 @@ defmodule ServerUtils.Parsers.ParamsParser do
     end
   end
 
-  @spec parse_integer_param!(Map.t(), String.t()) :: Integer.t()
+  @spec parse_integer_param!(map(), String.t()) :: integer()
   def parse_integer_param!(params_map, attr_name) do
     case Map.get(params_map, attr_name) do
       nil -> raise ParamException, message: "Param not found"

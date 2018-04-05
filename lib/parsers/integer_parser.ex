@@ -22,7 +22,7 @@ defmodule ServerUtils.Parsers.IntegerParser do
       ** (RuntimeError) "Invalid integer: abc"
 
   """
-  @spec parse_integer!(String.t) :: Integer.t
+  @spec parse_integer!(String.t) :: integer()
   def parse_integer!(value) when is_integer(value), do: value
   def parse_integer!(value) do
     case Integer.parse(value) do
@@ -48,7 +48,7 @@ defmodule ServerUtils.Parsers.IntegerParser do
       5
 
   """
-  @spec parse_integer(String.t, Integer.t) :: Integer.t
+  @spec parse_integer(String.t, integer()) :: integer()
   def parse_integer(value, _default) when is_integer(value), do: value
   def parse_integer(value, default) do
     case Integer.parse(value) do

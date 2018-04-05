@@ -14,7 +14,7 @@ defmodule ServerUtils.Logger do
 
   Returns `:ok` or an `{:error, reason}` tuple.
   """
-  @spec debug(String.t) :: Atom.t
+  @spec debug(String.t) :: atom()
   def debug(message) do
     Logger.debug fn -> message end
   end
@@ -24,7 +24,7 @@ defmodule ServerUtils.Logger do
 
   Returns `:ok` or an `{:error, reason}` tuple.
   """
-  @spec info(String.t) :: Atom.t
+  @spec info(String.t) :: atom()
   def info(message) do
     Logger.info fn -> message end
   end
@@ -38,7 +38,7 @@ defmodule ServerUtils.Logger do
 
   Returns a [Task](https://hexdocs.pm/elixir/Task.html#content) struct is Sentry is **enabled**.
   """
-  @spec warn(String.t) :: Atom.t | Task.t
+  @spec warn(String.t) :: atom() | Task.t
   def warn(message) do
     if System.get_env("DISABLE_SENTRY") do
       Logger.warn fn -> message end
@@ -63,7 +63,7 @@ defmodule ServerUtils.Logger do
 
   Returns a [Task](https://hexdocs.pm/elixir/Task.html#content) struct is Sentry is **enabled**.
   """
-  @spec error(String.t) :: Atom.t | Task.t
+  @spec error(String.t) :: atom() | Task.t
   def error(message) do
     if System.get_env("DISABLE_SENTRY") do
       Logger.error fn -> message end
