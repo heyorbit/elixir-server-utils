@@ -54,10 +54,10 @@ defmodule ServerUtils.Mixfile do
       {:excoveralls, "~> 0.8", only: :test},
       {:mock, "~> 0.3", only: :test},
       {:dialyxir, "~> 0.5", only: [:dev], runtime: false},
-      {:credo, "~> 0.9.0-rc7", only: [:dev, :test], runtime: false},
+      {:credo, "~> 0.9", only: [:dev, :test], runtime: false},
       {:plug, "~> 1.4"},
       {:ex_doc, "~> 0.16", only: :dev, runtime: false},
-      {:sentry, "~> 6.0.5"},
+      {:sentry, "~> 6.2"},
       {:joken, "~> 1.5"},
       {:exjsx, "~> 4.0"}
     ]
