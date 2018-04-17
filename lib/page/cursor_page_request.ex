@@ -10,7 +10,7 @@ defmodule ServerUtils.Page.CursorPageRequest do
   """
   @type t :: %__MODULE__{
           cursor: String.t(),
-          number_of_items: integer()
+          number_of_items: non_neg_integer()
         }
 
   defstruct [:cursor, :number_of_items]

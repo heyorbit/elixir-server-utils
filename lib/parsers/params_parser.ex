@@ -33,17 +33,25 @@ defmodule ServerUtils.Parsers.ParamsParser do
   @doc """
   Parses a page params from a request params map.
 
-  It returns the `PageParams.t` with the present values and with the default.
+  It returns the `PageParams.t` with the given values.
+
+  If the given page size exceeds the maxim page size or equal or less than 0, then the default value is returned
 
   ## Examples
 
-      iex> ServerUtils.Parsers.ParamsParser.parse_page_params!(%{"page_number": 5, "page_size": 23})
-      %PageParams{page_number: 5, page_size: 23}
+      iex> #{__MODULE__}.parse_page_params(%{"page_number" => 5, "page_size" => 23})
+      %ServerUtils.Page.PageParams{page_number: 5, page_size: 23}
 
       # With a configured max_page_size of 50
-      iex> ServerUtils.Parsers.ParamsParser.parse_page_params!(%{"page_number": 5, "page_size": 9000})
-      %PageParams{page_number: 5, page_size: 50}
+      iex> #{__MODULE__}.parse_page_params(%{"page_number" => 5, "page_size" => 9000})
+      %ServerUtils.Page.PageParams{page_number: 5,
+        page_size: #{Application.get_env(:server_utils, :max_page_size)}
+      }
 
+      iex> #{__MODULE__}.parse_page_params(%{"page_number" => 5, "page_size" => 0})
+      %ServerUtils.Page.PageParams{page_number: 5, page_size: #{
+    Application.get_env(:server_utils, :page_size)
+  }}
   """
   @spec parse_page_params(map()) :: PageParams.t()
   def parse_page_params(params_map, opts \\ []) do
@@ -61,13 +69,12 @@ defmodule ServerUtils.Parsers.ParamsParser do
     page_number = parse_integer_param(params_map, @page_number_key, default_page_number)
 
     page_size =
-      case parse_integer_param(params_map, @page_size_key, default_page_size) do
-        page_size when page_size > max_page_size ->
-          max_page_size
-
-        page_size ->
-          page_size
-      end
+      get_non_neg_param_value_with_max_limit(
+        params_map,
+        @page_size_key,
+        max_page_size,
+        default_page_size
+      )
 
     %PageParams{page_size: page_size, page_number: page_number}
   end
@@ -79,13 +86,15 @@ defmodule ServerUtils.Parsers.ParamsParser do
 
   ## Examples
 
-      iex> ServerUtils.Parsers.ParamsParser.parse_cursor_page_request!(%{"page_number": 5, "page_size": 23})
-      %PageParams{page_number: 5, page_size: 23}
+      iex> #{__MODULE__}.parse_cursor_page_request(%{"cursor" => "a_cursor", "number_of_items" => 23})
+      %ServerUtils.Page.CursorPageRequest{cursor: "a_cursor", number_of_items: 23}
 
-      # With a configured max_page_size of 50
-      iex> ServerUtils.Parsers.ParamsParser.parse_cursor_page_request!(%{"page_number": 5, "page_size": 9000})
-      %PageParams{page_number: 5, page_size: 50}
+      iex> #{__MODULE__}.parse_cursor_page_request(%{"cursor" => "a_cursor", "number_of_items" => 9000})
+      %ServerUtils.Page.CursorPageRequest{cursor: "a_cursor",
+      number_of_items: #{Application.get_env(:server_utils, :max_number_of_items)}}
 
+      iex> #{__MODULE__}.parse_cursor_page_request(%{"cursor": "", "number_of_items": 0})
+      %ServerUtils.Page.CursorPageRequest{cursor: "", number_of_items: #{@default_number_of_items}}
   """
   @spec parse_cursor_page_request(map()) :: CursorPageRequest.t()
   def parse_cursor_page_request(params_map, opts \\ []) do
@@ -97,17 +106,16 @@ defmodule ServerUtils.Parsers.ParamsParser do
         @default_number_of_items
 
     max_number_of_items =
-      opts[:max_page_size] || Application.get_env(:server_utils, :max_number_of_items) ||
+      opts[:max_number_of_items] || Application.get_env(:server_utils, :max_number_of_items) ||
         @default_max_page_size
 
     number_of_items =
-      case parse_integer_param(params_map, @page_number_of_items_key, default_number_of_items) do
-        number_of_items when number_of_items > max_number_of_items ->
-          max_number_of_items
-
-        number_of_items ->
-          number_of_items
-      end
+      get_non_neg_param_value_with_max_limit(
+        params_map,
+        @page_number_of_items_key,
+        max_number_of_items,
+        default_number_of_items
+      )
 
     cursor = Map.get(params_map, @cursor_key, default_cursor)
 
@@ -121,10 +129,10 @@ defmodule ServerUtils.Parsers.ParamsParser do
 
   ## Examples
 
-      iex> ServerUtils.Parsers.ParamsParser.parse_integer_param(%{a: 5}, :a, 10)
+      iex> #{__MODULE__}.parse_integer_param(%{a: 5}, :a, 10)
       5
 
-      iex> ServerUtils.Parsers.ParamsParser.parse_integer_param(%{a: 5}, :b, 10)
+      iex> #{__MODULE__}.parse_integer_param(%{a: 5}, :b, 10)
       10
 
   """
@@ -142,6 +150,25 @@ defmodule ServerUtils.Parsers.ParamsParser do
       nil -> raise ParamException, message: "Param not found"
       value when is_integer(value) -> value
       value -> IntegerParser.parse_integer!(value)
+    end
+  end
+
+  @spec get_non_neg_param_value_with_max_limit(
+          map(),
+          String.t(),
+          non_neg_integer,
+          non_neg_integer
+        ) :: non_neg_integer
+  defp get_non_neg_param_value_with_max_limit(params_map, param_key, max_value, default_value) do
+    case parse_integer_param(params_map, param_key, default_value) do
+      param_value when param_value > max_value ->
+        max_value
+
+      param_value when param_value <= 0 ->
+        default_value
+
+      param_value ->
+        param_value
     end
   end
 end

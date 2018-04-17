@@ -1,12 +1,13 @@
 defmodule ServerUtils.Parsers.ParamsParserTest do
   @moduledoc false
+  @moduletag [:unit]
 
   use ExUnit.Case
 
+  doctest ServerUtils.Parsers.ParamsParser
+
   alias ServerUtils.Parsers.ParamsParser
   alias ServerUtils.Page.PageParams
-
-  @moduletag :unit
 
   describe "Given a params map" do
     test "when parse the params then a PageParams is returned" do
@@ -67,5 +68,4 @@ defmodule ServerUtils.Parsers.ParamsParserTest do
       assert expected_value == result
     end
   end
-
 end

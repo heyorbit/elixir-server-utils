@@ -7,9 +7,9 @@ defmodule ServerUtils.Page.PageParams do
   Integer values for page number and page size
   """
   @type t :: %__MODULE__{
-    page_number: integer(),
-    page_size: integer(),
-  }
+          page_number: non_neg_integer(),
+          page_size: non_neg_integer()
+        }
 
   defstruct [:page_number, :page_size]
 end
