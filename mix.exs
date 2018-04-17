@@ -1,12 +1,11 @@
 defmodule ServerUtils.Mixfile do
-  @moduledoc """
-  """
+  @moduledoc false
   use Mix.Project
 
   def project do
     [
       app: :server_utils,
-      version: "0.1.4",
+      version: "0.1.5",
       elixir: "~> 1.6",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
