@@ -45,7 +45,7 @@ defmodule ServerUtils.Parsers.IntegerParserTest do
   test "Given a string that is not a representation of an integer when parse! it then an exception is thrown" do
     invalid_value = "zzzz"
 
-    assert_raise RuntimeError, "Invalid integer: #{inspect invalid_value}", fn ->
+    assert_raise RuntimeError, "Invalid integer: #{inspect(invalid_value)}", fn ->
       IntegerParser.parse_integer!(invalid_value)
     end
   end

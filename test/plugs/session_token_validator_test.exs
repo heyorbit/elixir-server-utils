@@ -41,14 +41,17 @@ defmodule ServerUtils.Plugs.SessionTokenValidatorTest do
       assert validated_conn.status == 401
     end
 
-    test "when it does not contain the jwt header then the conn halted with an error is returned", %{conn: conn} do
+    test "when it does not contain the jwt header then the conn halted with an error is returned",
+         %{conn: conn} do
       response_conn = SessionTokenValidator.call(conn, [])
 
       assert response_conn.halted == true
       assert response_conn.status == 401
     end
 
-    test "when it does not contain any header then the conn halted with an error is returned", %{conn: conn} do
+    test "when it does not contain any header then the conn halted with an error is returned", %{
+      conn: conn
+    } do
       conn = Map.delete(conn, :req_headers)
       response_conn = SessionTokenValidator.call(conn, [])
 
@@ -62,5 +65,4 @@ defmodule ServerUtils.Plugs.SessionTokenValidatorTest do
     conn = Plug.Adapters.Test.Conn.conn(%Conn{}, :get, "/", nil)
     {:ok, jwt: jwt, conn: conn}
   end
-
 end

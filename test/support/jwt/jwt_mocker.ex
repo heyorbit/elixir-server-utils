@@ -6,7 +6,7 @@ defmodule ServerUtils.Support.Jwt.JwtMocker do
   @secret_key "secret_key"
   def secret_key, do: @secret_key
 
-  @spec generate_json_token(String.t, integer()) :: String.t
+  @spec generate_json_token(String.t(), integer()) :: String.t()
   def generate_json_token(username, exp \\ 0) do
     %{username: username, exp: exp}
     |> token()
@@ -15,7 +15,7 @@ defmodule ServerUtils.Support.Jwt.JwtMocker do
     |> get_compact()
   end
 
-  @spec validate_token(String.t, String.t, integer()) :: atom()
+  @spec validate_token(String.t(), String.t(), integer()) :: atom()
   def validate_token(jwt, username, exp \\ 0) do
     jwt
     |> token()
@@ -24,5 +24,4 @@ defmodule ServerUtils.Support.Jwt.JwtMocker do
     |> verify!(hs256(@secret_key))
     |> elem(0)
   end
-
 end

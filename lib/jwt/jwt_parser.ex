@@ -20,7 +20,7 @@ defmodule ServerUtils.Jwt.JwtParser do
       {:error, "Blank claim username"}
 
   """
-  @spec get_claim(String.t, String.t, Keyword.t) :: {Atom.t, String.t}
+  @spec get_claim(String.t(), String.t(), Keyword.t()) :: {atom(), String.t()}
   def get_claim(jwt, claim_key, opts \\ [error_if_blank: false]) do
     jwt
     |> token()
@@ -29,11 +29,12 @@ defmodule ServerUtils.Jwt.JwtParser do
   end
 
   @doc false
-  @spec get_decoded_claim(Map.t, String.t, Keyword.t) :: {Atom.t, String.t}
+  @spec get_decoded_claim(map(), String.t(), Keyword.t()) :: {atom(), String.t()}
   defp get_decoded_claim(claims, claim_key, opts) do
     case Map.get(claims, claim_key) do
       nil ->
         {:error, "Cannot get claim #{claim_key}"}
+
       claim ->
         if claim == "" && opts[:error_if_blank] do
           {:error, "Blank claim #{claim_key}"}
@@ -42,5 +43,4 @@ defmodule ServerUtils.Jwt.JwtParser do
         end
     end
   end
-
 end

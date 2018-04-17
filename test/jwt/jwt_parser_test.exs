@@ -31,10 +31,9 @@ defmodule ServerUtils.Jwt.JwtParserTest do
     claim_value =
       ""
       |> JwtMocker.generate_json_token()
-      |> JwtParser.get_claim("username", [error_if_blank: true])
+      |> JwtParser.get_claim("username", error_if_blank: true)
       |> elem(0)
 
     assert :error == claim_value
   end
-
 end

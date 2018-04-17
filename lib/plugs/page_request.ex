@@ -10,10 +10,10 @@ defmodule ServerUtils.Plugs.PageRequest do
   alias ServerUtils.Parsers.ParamsParser
   alias ServerUtils.Page.PageParams
 
-  @spec init(Keyword.t) :: Keyword.t
+  @spec init(Keyword.t()) :: Keyword.t()
   def init(default), do: default
 
-  @spec call(Plug.Conn.t, Keyword.t) :: Plug.Conn.t
+  @spec call(Plug.Conn.t(), Keyword.t()) :: Plug.Conn.t()
   def call(%Plug.Conn{query_string: query_string} = conn, _default) do
     query_string
     |> URI.decode_query()
@@ -23,9 +23,8 @@ defmodule ServerUtils.Plugs.PageRequest do
 
   def call(conn, _default), do: conn
 
-  @spec set_page_request(PageParams.t, Plug.Conn.t) :: Plug.Conn.t
+  @spec set_page_request(PageParams.t(), Plug.Conn.t()) :: Plug.Conn.t()
   defp set_page_request(user_id, conn) do
     put_private(conn, :page_request, user_id)
   end
-
 end

@@ -14,7 +14,7 @@ defmodule ServerUtils.Support.Jwt.JwtMockerTest do
       generated_jwt
       |> token()
       |> with_validation("username", &(&1 == "fake_user"))
-      |> verify!(hs256(JwtMocker.secret_key))
+      |> verify!(hs256(JwtMocker.secret_key()))
       |> elem(0)
 
     assert :ok == is_jwt_valid
@@ -28,5 +28,4 @@ defmodule ServerUtils.Support.Jwt.JwtMockerTest do
 
     assert :ok == is_jwt_valid
   end
-
 end
