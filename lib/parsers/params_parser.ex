@@ -24,7 +24,7 @@ defmodule ServerUtils.Parsers.ParamsParser do
   @default_max_page_size 100
 
   @cursor_key Application.get_env(:server_utils, :cursor_key) || "cursor"
-  @page_number_of_items_key Application.get_env(:server_utils, :number_of_items) ||
+  @page_number_of_items_key Application.get_env(:server_utils, :number_of_items_key) ||
                               "number_of_items"
 
   @default_cursor ""
