@@ -1,4 +1,4 @@
-defmodule ServerUtils.Jwt.JwtParser do
+defmodule ServerUtils.Parsers.Jwt do
   @moduledoc """
   JWT parser to get claim values.
   """
@@ -10,13 +10,13 @@ defmodule ServerUtils.Jwt.JwtParser do
 
   ## Examples
 
-      iex> ServerUtils.Jwt.JwtParser.get_claim("example_jwt", "username")
+      iex> #{__MODULE__}.get_claim("example_jwt", "username")
       {:ok, "luke"}
 
-      iex> ServerUtils.Jwt.JwtParser.get_claim("example_jwt", "username")
+      iex> #{__MODULE__}.get_claim("example_jwt", "username")
       {:ok, ""}
 
-      iex> ServerUtils.Jwt.JwtParser.get_claim("example_jwt", "username", error_if_blank: true)
+      iex> #{__MODULE__}.get_claim("example_jwt", "username", error_if_blank: true)
       {:error, "Blank claim username"}
 
   """

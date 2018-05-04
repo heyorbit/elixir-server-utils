@@ -1,12 +1,15 @@
-defmodule ServerUtils.Plugs.SessionTokenValidatorTest do
+defmodule ServerUtils.Plugs.Session.JwtSessionTest do
   @moduledoc false
 
   use ExUnit.Case
+
   import Plug.Conn
 
   alias Plug.Conn
+
   alias ServerUtils.Support.Jwt.JwtMocker
-  alias ServerUtils.Plugs.SessionTokenValidator
+
+  alias ServerUtils.Plugs.Session.JwtSession
 
   @moduletag :units
 
@@ -14,7 +17,7 @@ defmodule ServerUtils.Plugs.SessionTokenValidatorTest do
 
   test "Given a keyword when initialize the plug then the keyword is returned" do
     expected_result = [test: :test]
-    initializated_result = SessionTokenValidator.init(expected_result)
+    initializated_result = JwtSession.init(expected_result)
     assert expected_result == initializated_result
   end
 
@@ -24,9 +27,9 @@ defmodule ServerUtils.Plugs.SessionTokenValidatorTest do
     test "when it contains the jwt header then the conn is returned", %{conn: conn, jwt: jwt} do
       conn = put_req_header(conn, "authorization", jwt)
 
-      expected_conn = put_private(conn, :user_id, @fake_user_id)
+      expected_conn = put_private(conn, :server_utils, %{user_id: @fake_user_id, jwt: jwt})
 
-      validated_conn = SessionTokenValidator.call(conn, [])
+      validated_conn = JwtSession.call(conn, [])
       assert expected_conn == validated_conn
     end
 
@@ -35,7 +38,7 @@ defmodule ServerUtils.Plugs.SessionTokenValidatorTest do
 
       conn = put_req_header(conn, "authorization", jwt)
 
-      validated_conn = SessionTokenValidator.call(conn, [])
+      validated_conn = JwtSession.call(conn, [])
 
       assert validated_conn.halted == true
       assert validated_conn.status == 401
@@ -43,7 +46,7 @@ defmodule ServerUtils.Plugs.SessionTokenValidatorTest do
 
     test "when it does not contain the jwt header then the conn halted with an error is returned",
          %{conn: conn} do
-      response_conn = SessionTokenValidator.call(conn, [])
+      response_conn = JwtSession.call(conn, [])
 
       assert response_conn.halted == true
       assert response_conn.status == 401
@@ -53,7 +56,7 @@ defmodule ServerUtils.Plugs.SessionTokenValidatorTest do
       conn: conn
     } do
       conn = Map.delete(conn, :req_headers)
-      response_conn = SessionTokenValidator.call(conn, [])
+      response_conn = JwtSession.call(conn, [])
 
       assert response_conn.halted == true
       assert response_conn.status == 401

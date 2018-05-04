@@ -1,8 +1,10 @@
-defmodule ServerUtils.Jwt.JwtParserTest do
+defmodule ServerUtils.Parsers.JwtTest do
+  @moduledoc false
+
   use ExUnit.Case
 
   alias ServerUtils.Support.Jwt.JwtMocker
-  alias ServerUtils.Jwt.JwtParser
+  alias ServerUtils.Parsers.Jwt, as: JwtParser
 
   @moduletag :unit
 

@@ -1,4 +1,4 @@
-defmodule ServerUtils.Plugs.SessionTokenValidator do
+defmodule ServerUtils.Plugs.Session.JwtSession do
   @moduledoc """
   Plug to intercept request and validate the presence of the JWT header
   """
@@ -6,7 +6,7 @@ defmodule ServerUtils.Plugs.SessionTokenValidator do
   @behaviour Plug
   import Plug.Conn
 
-  alias ServerUtils.Jwt.JwtParser
+  alias ServerUtils.Parsers.Jwt, as: JwtParser
 
   @authorization_header "authorization"
 
@@ -18,16 +18,16 @@ defmodule ServerUtils.Plugs.SessionTokenValidator do
     if Enum.any?(req_headers, fn {header, _value} ->
          String.downcase(header) == @authorization_header
        end) do
-      user_id =
+      jwt =
         req_headers
         |> Enum.filter(fn {header, _value} -> String.downcase(header) == @authorization_header end)
         |> List.first()
         |> elem(1)
-        |> JwtParser.get_claim("username", error_if_blank: true)
 
-      case user_id do
+      case JwtParser.get_claim(jwt, "username", error_if_blank: true) do
         {:ok, user_id} ->
-          set_decoded_jwt_data(user_id, conn)
+          session = %{user_id: user_id, jwt: jwt}
+          put_private(conn, :server_utils, session)
 
         {:error, _} ->
           send_unauthorized_response(conn)
@@ -46,10 +46,5 @@ defmodule ServerUtils.Plugs.SessionTokenValidator do
     conn
     |> send_resp(:unauthorized, "missing authentication")
     |> halt()
-  end
-
-  @spec set_decoded_jwt_data(String.t(), Plug.Conn.t()) :: Plug.Conn.t()
-  defp set_decoded_jwt_data(user_id, conn) do
-    put_private(conn, :user_id, user_id)
   end
 end
