@@ -1,4 +1,4 @@
-defmodule ServerUtils.Page.CursorPageRequest do
+defmodule ServerUtils.Pagination.Cursor.PageRequest do
   @moduledoc """
   Defines a page request for cursor pagination
   """

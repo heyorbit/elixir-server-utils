@@ -1,4 +1,4 @@
-defmodule ServerUtils.Page.PageParams do
+defmodule ServerUtils.Pagination.Classic.PageRequest do
   @moduledoc """
   Structure that represents a page request with the page information and the page size
   """

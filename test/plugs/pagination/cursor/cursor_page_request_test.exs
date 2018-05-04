@@ -6,8 +6,9 @@ defmodule ServerUtils.Plugs.CursorPageRequestTest do
 
   alias Plug.Conn
 
-  alias ServerUtils.Plugs.CursorPageRequest, as: CursorPageRequestPlug
-  alias ServerUtils.Page.CursorPageRequest
+  alias ServerUtils.Plugs.Pagination.Cursor.PageRequest, as: CursorPageRequestPlug
+
+  alias ServerUtils.Pagination.Cursor.PageRequest
 
   @moduletag :units
 
@@ -94,12 +95,12 @@ defmodule ServerUtils.Plugs.CursorPageRequestTest do
   end
 
   defp create_fixtures(_) do
-    page_request = %CursorPageRequest{
+    page_request = %PageRequest{
       cursor: @cursor_mock,
       number_of_items: @number_of_items
     }
 
-    default_page_request = %CursorPageRequest{
+    default_page_request = %PageRequest{
       cursor: @default_cursor,
       number_of_items: @default_number_of_items
     }

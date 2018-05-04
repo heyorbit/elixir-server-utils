@@ -1,4 +1,4 @@
-defmodule ServerUtils.Plugs.CursorPageRequest do
+defmodule ServerUtils.Plugs.Pagination.Classic.PageRequest do
   @moduledoc """
   Plug to build a paginated request.
 
@@ -7,8 +7,9 @@ defmodule ServerUtils.Plugs.CursorPageRequest do
 
   import Plug.Conn
 
-  alias ServerUtils.Parsers.ParamsParser
-  alias ServerUtils.Page.CursorPageRequest
+  alias ServerUtils.Parsers.Pagination.Classic.Parser
+
+  alias ServerUtils.Pagination.Classic.PageRequest
 
   @spec init(Keyword.t()) :: Keyword.t()
   def init(default), do: default
@@ -17,14 +18,14 @@ defmodule ServerUtils.Plugs.CursorPageRequest do
   def call(%Plug.Conn{query_string: query_string} = conn, _default) do
     query_string
     |> URI.decode_query()
-    |> ParamsParser.parse_cursor_page_request()
+    |> Parser.parse_page_params()
     |> set_page_request(conn)
   end
 
   def call(conn, _default), do: conn
 
-  @spec set_page_request(CursorPageRequest.t(), Plug.Conn.t()) :: Plug.Conn.t()
-  defp set_page_request(page_request, conn) do
-    put_private(conn, :page_request, page_request)
+  @spec set_page_request(PageRequest.t(), Plug.Conn.t()) :: Plug.Conn.t()
+  defp set_page_request(user_id, conn) do
+    put_private(conn, :page_request, user_id)
   end
 end

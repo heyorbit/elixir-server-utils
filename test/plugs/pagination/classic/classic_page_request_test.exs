@@ -1,4 +1,4 @@
-defmodule ServerUtils.Plugs.PageRequestTest do
+defmodule ServerUtils.Plugs.Pagination.ClassicPageRequestTest do
   @moduledoc false
 
   use ExUnit.Case
@@ -6,8 +6,9 @@ defmodule ServerUtils.Plugs.PageRequestTest do
 
   alias Plug.Conn
 
-  alias ServerUtils.Plugs.PageRequest
-  alias ServerUtils.Page.PageParams
+  alias ServerUtils.Plugs.Pagination.Classic.PageRequest, as: ClassicPageRequest
+
+  alias ServerUtils.Pagination.Classic.PageRequest
 
   @moduletag :units
 
@@ -25,7 +26,7 @@ defmodule ServerUtils.Plugs.PageRequestTest do
 
   test "Given a keyword when initialize the plug then the keyword is returned" do
     expected_result = [test: :test]
-    initializated_result = PageRequest.init(expected_result)
+    initializated_result = ClassicPageRequest.init(expected_result)
     assert expected_result == initializated_result
   end
 
@@ -38,7 +39,7 @@ defmodule ServerUtils.Plugs.PageRequestTest do
     } do
       expected_conn = put_private(conn, :page_request, page_request)
 
-      conn_with_page_request = PageRequest.call(conn, [])
+      conn_with_page_request = ClassicPageRequest.call(conn, [])
 
       assert expected_conn == conn_with_page_request
     end
@@ -50,7 +51,7 @@ defmodule ServerUtils.Plugs.PageRequestTest do
       expected_conn =
         put_private(invalid_page_request_query_conn, :page_request, default_page_request)
 
-      conn_with_page_request = PageRequest.call(invalid_page_request_query_conn, [])
+      conn_with_page_request = ClassicPageRequest.call(invalid_page_request_query_conn, [])
 
       assert expected_conn == conn_with_page_request
     end
@@ -68,7 +69,7 @@ defmodule ServerUtils.Plugs.PageRequestTest do
       expected_conn =
         put_private(invalid_page_request_query_conn, :page_request, default_page_request)
 
-      conn_with_page_request = PageRequest.call(invalid_page_request_query_conn, [])
+      conn_with_page_request = ClassicPageRequest.call(invalid_page_request_query_conn, [])
 
       assert expected_conn == conn_with_page_request
     end
@@ -86,16 +87,16 @@ defmodule ServerUtils.Plugs.PageRequestTest do
       expected_conn =
         put_private(invalid_page_request_query_conn, :page_request, default_page_request)
 
-      conn_with_page_request = PageRequest.call(invalid_page_request_query_conn, [])
+      conn_with_page_request = ClassicPageRequest.call(invalid_page_request_query_conn, [])
 
       assert expected_conn == conn_with_page_request
     end
   end
 
   defp create_fixtures(_) do
-    page_request = %PageParams{page_number: @page_request_number, page_size: @page_request_size}
+    page_request = %PageRequest{page_number: @page_request_number, page_size: @page_request_size}
 
-    default_page_request = %PageParams{
+    default_page_request = %PageRequest{
       page_number: @default_page_number_key,
       page_size: @default_page_size_key
     }
