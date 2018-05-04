@@ -1,16 +1,14 @@
 defmodule ServerUtils.Plugs.Pagination.ClassicPageRequestTest do
   @moduledoc false
+  @moduletag [:pagination, :classic]
 
-  use ExUnit.Case
-  import Plug.Conn
+  use ServerUtils.Support.PlugCase
 
   alias Plug.Conn
 
   alias ServerUtils.Plugs.Pagination.Classic.PageRequest, as: ClassicPageRequest
 
   alias ServerUtils.Pagination.Classic.PageRequest
-
-  @moduletag :units
 
   @page_size_key Application.get_env(:server_utils, :page_size_key) || "page_size"
   @page_number_key Application.get_env(:server_utils, :page_number_key) || "page_number"
@@ -37,7 +35,7 @@ defmodule ServerUtils.Plugs.Pagination.ClassicPageRequestTest do
       conn: conn,
       page_request: page_request
     } do
-      expected_conn = put_private(conn, :page_request, page_request)
+      expected_conn = put_private_page_request(conn, page_request)
 
       conn_with_page_request = ClassicPageRequest.call(conn, [])
 
@@ -49,7 +47,7 @@ defmodule ServerUtils.Plugs.Pagination.ClassicPageRequestTest do
       invalid_page_request_query_conn = Plug.Adapters.Test.Conn.conn(%Conn{}, :get, "/", nil)
 
       expected_conn =
-        put_private(invalid_page_request_query_conn, :page_request, default_page_request)
+        put_private_page_request(invalid_page_request_query_conn, default_page_request)
 
       conn_with_page_request = ClassicPageRequest.call(invalid_page_request_query_conn, [])
 
@@ -67,7 +65,7 @@ defmodule ServerUtils.Plugs.Pagination.ClassicPageRequestTest do
         )
 
       expected_conn =
-        put_private(invalid_page_request_query_conn, :page_request, default_page_request)
+        put_private_page_request(invalid_page_request_query_conn, default_page_request)
 
       conn_with_page_request = ClassicPageRequest.call(invalid_page_request_query_conn, [])
 
@@ -85,7 +83,7 @@ defmodule ServerUtils.Plugs.Pagination.ClassicPageRequestTest do
         )
 
       expected_conn =
-        put_private(invalid_page_request_query_conn, :page_request, default_page_request)
+        put_private_page_request(invalid_page_request_query_conn, default_page_request)
 
       conn_with_page_request = ClassicPageRequest.call(invalid_page_request_query_conn, [])
 

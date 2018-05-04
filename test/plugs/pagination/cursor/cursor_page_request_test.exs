@@ -1,16 +1,14 @@
 defmodule ServerUtils.Plugs.CursorPageRequestTest do
   @moduledoc false
+  @moduletag [:pagination, :cursor]
 
-  use ExUnit.Case
-  import Plug.Conn
+  use ServerUtils.Support.PlugCase
 
   alias Plug.Conn
 
   alias ServerUtils.Plugs.Pagination.Cursor.PageRequest, as: CursorPageRequestPlug
 
   alias ServerUtils.Pagination.Cursor.PageRequest
-
-  @moduletag :units
 
   @cursor_key Application.get_env(:server_utils, :cursor_key) || "cursor"
   @number_of_items_key Application.get_env(:server_utils, :number_of_items_key) ||
@@ -38,7 +36,7 @@ defmodule ServerUtils.Plugs.CursorPageRequestTest do
       conn: conn,
       page_request: page_request
     } do
-      expected_conn = put_private(conn, :page_request, page_request)
+      expected_conn = put_private_page_request(conn, page_request)
 
       conn_with_page_request = CursorPageRequestPlug.call(conn, [])
 
@@ -50,7 +48,7 @@ defmodule ServerUtils.Plugs.CursorPageRequestTest do
       invalid_page_request_query_conn = Plug.Adapters.Test.Conn.conn(%Conn{}, :get, "/", nil)
 
       expected_conn =
-        put_private(invalid_page_request_query_conn, :page_request, default_page_request)
+        put_private_page_request(invalid_page_request_query_conn, default_page_request)
 
       conn_with_page_request = CursorPageRequestPlug.call(invalid_page_request_query_conn, [])
 
@@ -68,7 +66,7 @@ defmodule ServerUtils.Plugs.CursorPageRequestTest do
         )
 
       expected_conn =
-        put_private(invalid_page_request_query_conn, :page_request, default_page_request)
+        put_private_page_request(invalid_page_request_query_conn, default_page_request)
 
       conn_with_page_request = CursorPageRequestPlug.call(invalid_page_request_query_conn, [])
 
@@ -86,7 +84,7 @@ defmodule ServerUtils.Plugs.CursorPageRequestTest do
         )
 
       expected_conn =
-        put_private(invalid_page_request_query_conn, :page_request, default_page_request)
+        put_private_page_request(invalid_page_request_query_conn, default_page_request)
 
       conn_with_page_request = CursorPageRequestPlug.call(invalid_page_request_query_conn, [])
 

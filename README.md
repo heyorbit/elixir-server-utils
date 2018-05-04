@@ -10,14 +10,13 @@ This project has several module utils to handle common tasks in a server, like a
 
 Features:
 
-  * Phoenix plug to validate JWT header
-  * Phoenix plug to parse a pagination request
-  * Simple integer parsing
-  * Page parsing:
+  * Phoenix plug to validate a JWT header
+  * Pagination parsing:
     * Cursor pagination
-    * Standard pagination
+    * Classic pagination
+  * Simple integer parsing
   * JWT claims parser
-  * Wrapped Logger with Sentry integration
+  * Logger wrapper with [Sentry](https://sentry.io/welcome/) integration
 
 ## Installation
 
@@ -39,7 +38,7 @@ mix deps.get
 
 Configure default pagination params:
 
-* Standard pagination
+* Classic pagination
 
 ```elixir
 config :server_utils,
@@ -71,7 +70,7 @@ Set the plug in your router file to use it in a pipeline:
 
 ```elixir
 pipeline :paginated do
-  plug(ServerUtils.Plugs.CursorPageRequest)
+  plug(ServerUtils.Plugs.Pagination.Cursor.PageRequest)
 end
 
 scope "/" do
@@ -81,15 +80,42 @@ scope "/" do
 end
 ```
 
-Depending on the plug used, CursorPageRequest.t() or PageParams.t() will be inject in the Plug.Conn.t() struct:
+Depending on the plug used, either a cursor or classic `PageRequest.t()` struct will be inject in the connection:
 
 ```elixir
 defmodule MyApp.StuffController do
   use MyApp, :controller
 
   def get_stuff(conn, params) do
-    cursor_page_request = conn.private[:page_request]
+    cursor_page_request = conn.private[:server_utils][:page_request]
     # Some other code using the cursor page request...
+  end
+end
+```
+
+### Session
+
+If the plug JWT is used, the authorization header will be validated and the session token will be injected into the connection.
+
+```elixir
+pipeline :authenticated do
+  plug(ServerUtils.Plugs.Session.JwtSession)
+end
+
+scope "/" do
+  pipe_through([:authenticated])
+
+  get("/protected_stuff", MyApp.StuffController, :get_protected_stuff)
+end
+```
+
+```elixir
+defmodule MyApp.StuffController do
+  use MyApp, :controller
+
+  def get_protected_stuff(conn, params) do
+    cursor_page_request = conn.private[:server_utils][:session]
+    # Some other code using the authenticated request...
   end
 end
 ```

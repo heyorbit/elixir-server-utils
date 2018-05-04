@@ -2,10 +2,12 @@ defmodule ServerUtils.Mixfile do
   @moduledoc false
   use Mix.Project
 
+  @version "0.2.0"
+
   def project do
     [
       app: :server_utils,
-      version: "0.2.0",
+      version: @version,
       elixir: "~> 1.6",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
@@ -13,6 +15,13 @@ defmodule ServerUtils.Mixfile do
       aliases: aliases(),
       package: package(),
       description: description(),
+      docs: [
+        source_ref: "v#{@version}",
+        main: "installation",
+        extra_section: "README",
+        formatters: ["html", "epub"],
+        extras: ["README.md"]
+      ],
       test_coverage: [tool: ExCoveralls],
       preferred_cli_env: [
         coveralls: :test,
@@ -55,7 +64,7 @@ defmodule ServerUtils.Mixfile do
       {:dialyxir, "~> 0.5", only: [:dev], runtime: false},
       {:credo, "~> 0.9", only: [:dev, :test], runtime: false},
       {:plug, "~> 1.4"},
-      {:ex_doc, "~> 0.16", only: :dev, runtime: false},
+      {:ex_doc, ">= 0.0.0", only: :dev},
       {:sentry, "~> 6.2"},
       {:joken, "~> 1.5"},
       {:exjsx, "~> 4.0"}

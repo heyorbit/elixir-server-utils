@@ -26,7 +26,7 @@ defmodule ServerUtils.Plugs.Session.JwtSession do
 
       case JwtParser.get_claim(jwt, "username", error_if_blank: true) do
         {:ok, user_id} ->
-          session = %{user_id: user_id, jwt: jwt}
+          session = %{session: %{user_id: user_id, jwt: jwt}}
           put_private(conn, :server_utils, session)
 
         {:error, _} ->

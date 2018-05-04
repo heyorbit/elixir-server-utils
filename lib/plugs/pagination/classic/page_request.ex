@@ -25,7 +25,7 @@ defmodule ServerUtils.Plugs.Pagination.Classic.PageRequest do
   def call(conn, _default), do: conn
 
   @spec set_page_request(PageRequest.t(), Plug.Conn.t()) :: Plug.Conn.t()
-  defp set_page_request(user_id, conn) do
-    put_private(conn, :page_request, user_id)
+  defp set_page_request(page_request, conn) do
+    put_private(conn, :server_utils, %{page_request: page_request})
   end
 end

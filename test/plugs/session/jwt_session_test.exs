@@ -1,7 +1,7 @@
 defmodule ServerUtils.Plugs.Session.JwtSessionTest do
   @moduledoc false
 
-  use ExUnit.Case
+  use ServerUtils.Support.PlugCase
 
   import Plug.Conn
 
@@ -27,7 +27,7 @@ defmodule ServerUtils.Plugs.Session.JwtSessionTest do
     test "when it contains the jwt header then the conn is returned", %{conn: conn, jwt: jwt} do
       conn = put_req_header(conn, "authorization", jwt)
 
-      expected_conn = put_private(conn, :server_utils, %{user_id: @fake_user_id, jwt: jwt})
+      expected_conn = put_private_session(conn, %{user_id: @fake_user_id, jwt: jwt})
 
       validated_conn = JwtSession.call(conn, [])
       assert expected_conn == validated_conn
