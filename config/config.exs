@@ -2,6 +2,23 @@
 # and its dependencies with the aid of the Mix.Config module.
 use Mix.Config
 
+config :git_hooks,
+  verbose: true,
+  hooks: [
+    pre_commit: [
+      mix_tasks: [
+        "format --check-formatted --dry-run",
+        "credo"
+      ]
+    ],
+    pre_push: [
+      mix_tasks: [
+        "dialyzer",
+        "coveralls"
+      ]
+    ]
+  ]
+
 # Standard pagination
 config :server_utils,
   page_size_key: "page_size",
