@@ -6,7 +6,7 @@ defmodule ServerUtils.SentryLoggerTest do
   import ExUnit.CaptureLog
   import Mock
 
-  alias ServerUtils.Logger
+  alias ServerUtils.SentryLogger
 
   describe "Given a message" do
     setup _ do
@@ -18,7 +18,7 @@ defmodule ServerUtils.SentryLoggerTest do
       message = "this is a debug message"
 
       assert capture_log(fn ->
-               Logger.debug(message)
+               SentryLogger.debug(message)
              end) =~ message
     end
 
@@ -26,7 +26,7 @@ defmodule ServerUtils.SentryLoggerTest do
       message = "this is a info message"
 
       assert capture_log(fn ->
-               Logger.info(message)
+               SentryLogger.info(message)
              end) =~ message
     end
 
@@ -34,7 +34,7 @@ defmodule ServerUtils.SentryLoggerTest do
       message = "this is a warn message"
 
       assert capture_log(fn ->
-               Logger.warn(message)
+               SentryLogger.warn(message)
              end) =~ message
     end
 
@@ -42,7 +42,7 @@ defmodule ServerUtils.SentryLoggerTest do
       message = "this is a error message"
 
       assert capture_log(fn ->
-               Logger.error(message)
+               SentryLogger.error(message)
              end) =~ message
     end
   end
@@ -53,7 +53,7 @@ defmodule ServerUtils.SentryLoggerTest do
         capture_log(fn ->
           Process.register(self(), :test)
 
-          Logger.warn("this is a error message")
+          SentryLogger.warn("this is a error message")
 
           assert_receive {"this is a error message"}, 500
         end)
@@ -65,7 +65,7 @@ defmodule ServerUtils.SentryLoggerTest do
         capture_log(fn ->
           Process.register(self(), :test)
 
-          Logger.error("this is a error message")
+          SentryLogger.error("this is a error message")
 
           assert_receive {"this is a error message"}, 500
         end)
