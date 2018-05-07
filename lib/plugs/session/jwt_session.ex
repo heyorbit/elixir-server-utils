@@ -27,7 +27,8 @@ defmodule ServerUtils.Plugs.Session.JwtSession do
       case JwtParser.get_claim(jwt, "username", error_if_blank: true) do
         {:ok, user_id} ->
           session = %{session: %{user_id: user_id, jwt: jwt}}
-          put_private(conn, :server_utils, session)
+          private = Map.merge(conn.private[:server_utils] || %{}, session)
+          put_private(conn, :server_utils, private)
 
         {:error, _} ->
           send_unauthorized_response(conn)

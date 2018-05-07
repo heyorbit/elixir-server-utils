@@ -26,6 +26,8 @@ defmodule ServerUtils.Plugs.Pagination.Classic.PageRequest do
 
   @spec set_page_request(PageRequest.t(), Plug.Conn.t()) :: Plug.Conn.t()
   defp set_page_request(page_request, conn) do
-    put_private(conn, :server_utils, %{page_request: page_request})
+    page_request = %{page_request: page_request}
+    private = Map.merge(conn.private[:server_utils] || %{}, page_request)
+    put_private(conn, :server_utils, private)
   end
 end
