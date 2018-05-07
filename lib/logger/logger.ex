@@ -1,4 +1,4 @@
-defmodule ServerUtils.Logger do
+defmodule ServerUtils.SentryLogger do
   @moduledoc """
     Logger wrapper that handles `warn` and `error` logging and sends a Sentry report. Both logging and Sentry calls will be executed asynchronously.
 

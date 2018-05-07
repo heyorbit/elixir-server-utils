@@ -1,4 +1,4 @@
-defmodule ServerUtils.LoggerTest do
+defmodule ServerUtils.SentryLoggerTest do
   @moduledoc false
 
   use ExUnit.Case, async: false
