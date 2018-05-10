@@ -95,7 +95,7 @@ end
 
 ### Session
 
-If the plug JWT is used, the authorization header will be validated and the session token will be injected into the connection.
+If the plug JWT is used, the authorization header will be validated and a struct `ServerUtils.Session.t` will be injected into the connection.
 
 ```elixir
 pipeline :authenticated do
@@ -115,6 +115,7 @@ defmodule MyApp.StuffController do
 
   def get_protected_stuff(conn, params) do
     cursor_page_request = conn.private[:server_utils][:session]
+
     # Some other code using the authenticated request...
   end
 end
