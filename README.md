@@ -24,7 +24,7 @@ Add to dependencies
 
 ```elixir
 def deps do
-  [{:server_utils, "~> 0.2.0"}]
+  [{:server_utils, "~> 0.2.3"}]
 end
 ```
 
