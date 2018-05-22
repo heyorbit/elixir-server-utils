@@ -63,7 +63,7 @@ defmodule ServerUtils.Mixfile do
       {:mock, "~> 0.3", only: :test},
       {:dialyxir, "~> 0.5", only: [:dev], runtime: false},
       {:credo, "~> 0.9", only: [:dev, :test], runtime: false},
-      {:plug, "~> 1.4"},
+      {:plug, "~> 1.5.1"},
       {:ex_doc, ">= 0.0.0", only: :dev},
       {:sentry, "~> 6.2"},
       {:joken, "~> 1.5"},
