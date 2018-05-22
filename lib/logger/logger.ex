@@ -36,7 +36,7 @@ defmodule ServerUtils.SentryLogger do
 
   Returns `:ok` or an `{:error, reason}` tuple.
 
-  Returns a [Task](https://hexdocs.pm/elixir/Task.html#content) struct is Sentry is **enabled**.
+  Returns a [Task](https://hexdocs.pm/elixir/Task.html#content) struct if Sentry is **enabled**.
   """
   @spec warn(String.t()) :: atom() | Task.t()
   def warn(message) do
@@ -44,7 +44,9 @@ defmodule ServerUtils.SentryLogger do
       Logger.warn(fn -> message end)
     else
       opts = [
-        environment: System.get_env("ENVIRONMENT"),
+        tags: %{
+          environment: System.get_env("ENVIRONMENT")
+        },
         level: "warning"
       ]
 
@@ -61,7 +63,7 @@ defmodule ServerUtils.SentryLogger do
 
   Returns `:ok` or an `{:error, reason}` tuple if Sentry is **disabled**.
 
-  Returns a [Task](https://hexdocs.pm/elixir/Task.html#content) struct is Sentry is **enabled**.
+  Returns a [Task](https://hexdocs.pm/elixir/Task.html#content) struct if Sentry is **enabled**.
   """
   @spec error(String.t()) :: atom() | Task.t()
   def error(message) do
@@ -69,7 +71,9 @@ defmodule ServerUtils.SentryLogger do
       Logger.error(fn -> message end)
     else
       opts = [
-        environment: System.get_env("ENVIRONMENT"),
+        tags: %{
+          environment: System.get_env("ENVIRONMENT")
+        },
         level: "error"
       ]
 
