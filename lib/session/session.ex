@@ -9,11 +9,11 @@ defmodule ServerUtils.Session do
   - session: The JWT
   """
   @type t :: %__MODULE__{
-          user_id: any(),
-          jwt: String.t()
+          jwt: String.t(),
+          payload: map
         }
 
-  @enforce_keys [:jwt, :user_id]
+  @enforce_keys [:jwt]
 
-  defstruct @enforce_keys
+  defstruct [payload: %{}] ++ @enforce_keys
 end

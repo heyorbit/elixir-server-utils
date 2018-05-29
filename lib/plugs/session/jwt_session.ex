@@ -24,12 +24,11 @@ defmodule ServerUtils.Plugs.Session.JwtSession do
         |> List.first()
         |> elem(1)
 
-      case JwtParser.get_claim(jwt, "username", error_if_blank: true) do
-        {:ok, user_id} ->
-          session = %{session: %ServerUtils.Session{user_id: user_id, jwt: jwt}}
-          private = Map.merge(conn.private[:server_utils] || %{}, session)
-          put_private(conn, :server_utils, private)
-
+      with {:ok, payload} <- JwtParser.get_claims(jwt) do
+        session = %{session: %ServerUtils.Session{jwt: jwt, payload: payload}}
+        private = Map.merge(conn.private[:server_utils] || %{}, session)
+        put_private(conn, :server_utils, private)
+      else
         {:error, _} ->
           send_unauthorized_response(conn)
       end

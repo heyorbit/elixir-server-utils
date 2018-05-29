@@ -38,4 +38,14 @@ defmodule ServerUtils.Parsers.JwtTest do
 
     assert :error == claim_value
   end
+
+  test "Given a jwt when getting the claims then a map with the claims is returned" do
+    {result, claims} =
+      @fake_username
+      |> JwtMocker.generate_json_token()
+      |> JwtParser.get_claims()
+
+    assert result == :ok
+    assert claims == %{"exp" => 0, "username" => @fake_username}
+  end
 end

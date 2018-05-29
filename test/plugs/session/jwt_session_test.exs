@@ -14,6 +14,7 @@ defmodule ServerUtils.Plugs.Session.JwtSessionTest do
   @moduletag :units
 
   @fake_user_id "user@fake.is"
+  @fake_exp 23
 
   test "Given a keyword when initialize the plug then the keyword is returned" do
     expected_result = [test: :test]
@@ -28,16 +29,17 @@ defmodule ServerUtils.Plugs.Session.JwtSessionTest do
       conn = put_req_header(conn, "authorization", jwt)
 
       expected_conn =
-        put_private_session(conn, %ServerUtils.Session{user_id: @fake_user_id, jwt: jwt})
+        put_private_session(conn, %ServerUtils.Session{
+          jwt: jwt,
+          payload: %{"username" => @fake_user_id, "exp" => @fake_exp}
+        })
 
       validated_conn = JwtSession.call(conn, [])
       assert expected_conn == validated_conn
     end
 
-    test "when it contains an invalid jwt header then an error is returned", %{conn: conn} do
-      jwt = JwtMocker.generate_json_token("")
-
-      conn = put_req_header(conn, "authorization", jwt)
+    test "when it contains an invalid jwt then an error is returned", %{conn: conn} do
+      conn = put_req_header(conn, "authorization", "invalid_token")
 
       validated_conn = JwtSession.call(conn, [])
 
@@ -65,7 +67,7 @@ defmodule ServerUtils.Plugs.Session.JwtSessionTest do
   end
 
   defp create_fixtures(_) do
-    jwt = JwtMocker.generate_json_token(@fake_user_id)
+    jwt = JwtMocker.generate_json_token(@fake_user_id, @fake_exp)
     conn = Plug.Adapters.Test.Conn.conn(%Conn{}, :get, "/", nil)
     {:ok, jwt: jwt, conn: conn}
   end

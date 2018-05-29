@@ -96,6 +96,7 @@ end
 ### Session
 
 If the plug JWT is used, the authorization header will be validated and a struct `ServerUtils.Session.t` will be injected into the connection.
+The session data will include the JWT string and a map with the decoded payload from the token.
 
 ```elixir
 pipeline :authenticated do

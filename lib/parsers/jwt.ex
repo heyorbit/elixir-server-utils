@@ -28,6 +28,28 @@ defmodule ServerUtils.Parsers.Jwt do
     |> get_decoded_claim(claim_key, opts)
   end
 
+  @doc """
+  Gets the claims from a JWT string.
+
+  ## Examples
+
+      iex> #{__MODULE__}.get_claims("example_jwt")
+      {:ok, %{"username" => "luke"}}
+
+      iex> #{__MODULE__}.get_claims("example_jwt")
+      {:ok, %{}}
+
+      iex> #{__MODULE__}.get_claims(nil)
+      {:error, :invalid_token}
+
+  """
+  @spec get_claims(String.t()) :: {atom(), String.t()}
+  def get_claims(jwt) do
+    {:ok, jwt |> token() |> peek()}
+  rescue
+    _ -> {:error, :invalid_token}
+  end
+
   @doc false
   @spec get_decoded_claim(map(), String.t(), Keyword.t()) :: {atom(), String.t()}
   defp get_decoded_claim(claims, claim_key, opts) do

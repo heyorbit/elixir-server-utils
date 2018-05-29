@@ -2,7 +2,7 @@ defmodule ServerUtils.Mixfile do
   @moduledoc false
   use Mix.Project
 
-  @version "0.2.4"
+  @version "0.3.0"
 
   def project do
     [
@@ -68,7 +68,7 @@ defmodule ServerUtils.Mixfile do
       {:sentry, "~> 6.2"},
       {:joken, "~> 1.5"},
       {:exjsx, "~> 4.0"},
-      {:git_hooks, "~> 0.1.1"}
+      {:git_hooks, "~> 0.2"}
     ]
   end
 
