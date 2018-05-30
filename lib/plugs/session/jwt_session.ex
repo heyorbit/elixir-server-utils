@@ -7,6 +7,7 @@ defmodule ServerUtils.Plugs.Session.JwtSession do
   import Plug.Conn
 
   alias ServerUtils.Parsers.Jwt, as: JwtParser
+  alias ServerUtils.SentryLogger
 
   @authorization_header "authorization"
 
@@ -30,9 +31,11 @@ defmodule ServerUtils.Plugs.Session.JwtSession do
         put_private(conn, :server_utils, private)
       else
         {:error, _} ->
+          SentryLogger.info("Unable to parse claims from jwt: #{jwt}")
           send_unauthorized_response(conn)
       end
     else
+      SentryLogger.debug("Header for authorization not found: #{@authorization_header}")
       send_unauthorized_response(conn)
     end
   end
