@@ -45,7 +45,7 @@ defmodule ServerUtils.SentryLogger do
     else
       opts = [
         tags: %{
-          environment: System.get_env("ENVIRONMENT")
+          env: System.get_env("ENVIRONMENT")
         },
         level: "warning"
       ]
