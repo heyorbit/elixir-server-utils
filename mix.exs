@@ -68,7 +68,7 @@ defmodule ServerUtils.Mixfile do
       {:sentry, "~> 6.2"},
       {:joken, "~> 1.5"},
       {:exjsx, "~> 4.0"},
-      {:git_hooks, "~> 0.2"}
+      {:git_hooks, "~> 0.2.0", only: :dev}
     ]
   end
 
