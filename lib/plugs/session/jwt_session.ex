@@ -25,15 +25,7 @@ defmodule ServerUtils.Plugs.Session.JwtSession do
         |> List.first()
         |> elem(1)
 
-      with {:ok, payload} <- JwtParser.get_claims(jwt) do
-        session = %{session: %ServerUtils.Session{jwt: jwt, payload: payload}}
-        private = Map.merge(conn.private[:server_utils] || %{}, session)
-        put_private(conn, :server_utils, private)
-      else
-        {:error, _} ->
-          SentryLogger.info("Unable to parse claims from jwt: #{jwt}")
-          send_unauthorized_response(conn)
-      end
+      put_session(conn, jwt)
     else
       SentryLogger.debug("Header for authorization not found: #{@authorization_header}")
       send_unauthorized_response(conn)
@@ -42,6 +34,19 @@ defmodule ServerUtils.Plugs.Session.JwtSession do
 
   def call(conn, _default) do
     send_unauthorized_response(conn)
+  end
+
+  @spec put_session(Plug.Conn.t(), String.t()) :: Plug.Conn.t()
+  def put_session(conn, jwt) do
+    with {:ok, payload} <- JwtParser.get_claims(jwt) do
+      session = %{session: %ServerUtils.Session{jwt: jwt, payload: payload}}
+      private = Map.merge(conn.private[:server_utils] || %{}, session)
+      put_private(conn, :server_utils, private)
+    else
+      {:error, _} ->
+        SentryLogger.info("Unable to parse claims from jwt: #{jwt}")
+        send_unauthorized_response(conn)
+    end
   end
 
   @spec send_unauthorized_response(Plug.Conn.t()) :: Plug.Conn.t()
