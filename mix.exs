@@ -2,7 +2,7 @@ defmodule ServerUtils.Mixfile do
   @moduledoc false
   use Mix.Project
 
-  @version "0.3.3"
+  @version "0.3.4"
 
   def project do
     [
